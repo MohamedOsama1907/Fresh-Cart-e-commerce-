@@ -1,3 +1,6 @@
-export default function ProfileLayout({ children }: LayoutProps<"/Profile">) {
-  return <>{children}</>;
+
+export default function layout() {
+  return (
+    <div>layout</div>
+  )
 }
