@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.9.2",
     "@reduxjs/toolkit": "^2.13.0",
     "@tabler/icons-react": "^3.49.0",
     "@tabler/payments-react": "^0.1.0",

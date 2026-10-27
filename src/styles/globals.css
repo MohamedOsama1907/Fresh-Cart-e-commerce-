@@ -1,5 +1,9 @@
 @import "tailwindcss";
 @theme {
+  --font-sans: var(--font-plus-jakarta-sans), sans-serif;
+}
+
+@theme {
   --color-primary-50: #f0fdf4;
   --color-primary-100: #dcfce7;
   --color-primary-200: #bbf7d0;
@@ -12,11 +16,19 @@
   --color-primary-900: #134e28;
   --color-primary-950: #052f21;
 }
+
 @layer base {
   body {
     background-color: #ffffff;
     color: rgb(55 65 81); /* text-gray-700 */
-    font-family: var(--font-sans);
+    font-weight: 500;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
   }
 
   span,
@@ -74,8 +86,8 @@
   }
 
   @media (min-width: 1024px) {
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
   }
 }
 .swiper-pagination-bullet {
