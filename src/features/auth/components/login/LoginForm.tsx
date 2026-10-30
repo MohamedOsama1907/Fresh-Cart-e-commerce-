@@ -16,10 +16,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { loginValues, loginSchema } from "../../schemas/login.schema";
-import { loginAction } from "../../server/login.actions";
+import { loginAction, LoginActionReturn } from "../../server/login.actions";
+import { authActions } from "../../slices/auth.slice";
+import { useDispatch } from "react-redux";
 
 export default function LoginForm() {
   const router = useRouter();
+  const { setAuthStates } = authActions;
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const { register, handleSubmit, formState, setError } = useForm<loginValues>({
     defaultValues: { email: "", password: "" },
@@ -27,10 +31,16 @@ export default function LoginForm() {
   });
 
   const handleLogin: SubmitHandler<loginValues> = async (values) => {
-    const response = await loginAction(values);
+    const response: LoginActionReturn = await loginAction(values);
 
     if (response.success) {
       toast.success(response.message);
+      dispatch(
+        setAuthStates({
+          isAuthenticated: true,
+          user: response.data.user,
+        }),
+      );
       router.push("/");
       return;
     }

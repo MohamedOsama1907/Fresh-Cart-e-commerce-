@@ -1,7 +1,11 @@
+import type { Metadata } from "next";
+import SupportScreen from "@/features/support/components/Support.screen";
+
+export const metadata: Metadata = {
+  title: "Contact Us - FreshCart",
+  description: "Get in touch with the FreshCart support team.",
+};
+
 export default function ContactPage() {
-  return (
-    <div className="p-3 bg-gray-200 text-center text-xl font-semibold">
-      <h2>Contact Page</h2>
-    </div>
-  );
+  return <SupportScreen />;
 }

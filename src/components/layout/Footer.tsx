@@ -97,9 +97,9 @@ export default function Footer() {
               <li><Link href="/shop" className={footerLinkClass}>All Products</Link></li>
               <li><Link href="/categories" className={footerLinkClass}>Categories</Link></li>
               <li><Link href="/brands" className={footerLinkClass}>Brands</Link></li>
-              <li><Link href="/category/6439d2d167d9aa4ca970649f" className={footerLinkClass}>Electronics</Link></li>
-              <li><Link href="/category/6439d5b90049ad0b52b90048" className={footerLinkClass}>Men&apos;s Fashion</Link></li>
-              <li><Link href="/category/6439d58a0049ad0b52b9003f" className={footerLinkClass}>Women&apos;s Fashion</Link></li>
+              <li><Link href="/categories/6439d2d167d9aa4ca970649f" className={footerLinkClass}>Electronics</Link></li>
+              <li><Link href="/categories/6439d5b90049ad0b52b90048" className={footerLinkClass}>Men&apos;s Fashion</Link></li>
+              <li><Link href="/categories/6439d58a0049ad0b52b9003f" className={footerLinkClass}>Women&apos;s Fashion</Link></li>
             </ul>
           </div>
 

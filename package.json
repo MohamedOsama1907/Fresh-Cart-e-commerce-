@@ -11,17 +11,21 @@
   "dependencies": {
     "@hookform/resolvers": "^5.9.2",
     "@reduxjs/toolkit": "^2.13.0",
+    "@sector-labs/react-image-gallery": "^1.0.1",
     "@tabler/icons-react": "^3.49.0",
     "@tabler/payments-react": "^0.1.0",
     "@tanstack/react-query": "^5.104.3",
     "@tanstack/react-query-devtools": "^5.104.3",
     "axios": "^1.20.0",
+    "motion": "^14.7.1",
     "next": "16.4.1",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "react-hook-form": "^7.90.0",
+    "react-image-gallery": "^2.1.2",
     "react-redux": "^9.3.0",
     "sonner": "^2.0.8",
+    "swiper": "^14.3.0",
     "zod": "^4.6.7"
   },
   "devDependencies": {

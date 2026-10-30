@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Toaster } from "sonner";
 import Providers from "@/components/Providers/Providers";
+import { verifyToken } from "@/features/auth/server/auth.actions";
 
 export const metadata: Metadata = {
   title: "FreshCart",
@@ -14,15 +15,18 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-plus-jakarta-sans",
 });
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const authStates = await verifyToken();
   return (
-    <html lang="en" className={`h-full antialiased ${plusJakartaSans.variable}`}>
+    <html
+      lang="en"
+      className={`h-full antialiased ${plusJakartaSans.variable}`}>
       <body className="min-h-full flex flex-col font-sans">
-        <Navbar />
         {/* to handle the issue of the client component */}
-        <Providers>
+        <Providers preloadedState={{ authReducer: authStates }}>
+          {" "}
+          <Navbar />
           {children}
-
           <Toaster richColors position="top-right" />
         </Providers>
         <Footer />

@@ -1,7 +1,10 @@
-export default function ProductDetailsPage() {
-  return (
-    <div className="p-3 bg-gray-200 text-center text-xl font-semibold">
-      <h2>Product Details Page</h2>
-    </div>
-  );
+import ProductDetailsScreen from "@/features/products/components/ProductDetails/productDetails";
+
+export default async function ProductDetailsPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  return <ProductDetailsScreen productId={id} />;
 }

@@ -2,16 +2,35 @@
 
 import { AxiosRequestConfig, isAxiosError } from "axios";
 import z from "zod";
+import { cookies } from "next/headers";
 import { apiClient } from "@/services/apiClient";
 import { loginSchema, loginValues } from "../schemas/login.schema";
 
 type LoginFieldErrors = Partial<Record<keyof loginValues, string[]>>;
+type LoginApiResponse = {
+  message: string;
+  user: {
+    name: string;
+    email: string;
+    role: string;
+  };
+  token: string;
+};
+type LoginSuccess = {
+  success: true;
+  message: string;
+  data: {
+    user: LoginApiResponse["user"];
+  };
+};
 
-type LoginActionReturn = {
-  success: boolean;
+type LoginFailure = {
+  success: false;
   message: string;
   fieldErrors?: LoginFieldErrors;
 };
+
+export type LoginActionReturn = LoginSuccess | LoginFailure;
 
 export async function loginAction(
   values: loginValues,
@@ -33,11 +52,18 @@ export async function loginAction(
       url: "/auth/signin",
       data: validationResult.data,
     };
-    const response = await apiClient(option);
+    const { data } = await apiClient<LoginApiResponse>(option);
+
+    const cookieStore = await cookies();
+    cookieStore.set("token", data.token, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 7 * 30,
+    });
 
     return {
       success: true,
-      message: response.data.message ?? "Signed in successfully.",
+      message: data.message ?? "Signed in successfully.",
+      data: { user: data.user },
     };
   } catch (error) {
     if (isAxiosError(error)) {

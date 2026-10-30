@@ -1,7 +1,11 @@
+import type { Metadata } from "next";
+import WishlistScreen from "@/features/wishlist/components/whishlist.screen";
+
+export const metadata: Metadata = {
+  title: "My Wishlist | FreshCart",
+  description: "View and manage the products you have saved on FreshCart.",
+};
+
 export default function WishlistPage() {
-  return (
-    <div className="p-3 bg-gray-200 text-center text-xl font-semibold">
-      <h2>Wishlist Page</h2>
-    </div>
-  );
+  return <WishlistScreen />;
 }
