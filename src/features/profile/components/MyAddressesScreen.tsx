@@ -2,6 +2,8 @@
 
 import { useState, type FormEvent } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import Link from "next/link";
 import { toast } from "sonner";
 import {
   IconMapPin,
@@ -10,6 +12,7 @@ import {
   IconPhone,
   IconX,
   IconBuilding,
+  IconArrowRight,
 } from "@tabler/icons-react";
 import Loader from "@/components/Loader/Loader";
 import Error from "@/components/Error/Error";
@@ -19,8 +22,13 @@ import {
   removeAddress,
 } from "../server/profile.actions";
 import type { AddAddressBody } from "../types/profile.types";
+import type { appState } from "@/store/store";
 
 export default function MyAddressesScreen() {
+  const { isAuthenticated, user } = useSelector(
+    (state: appState) => state.authReducer,
+  );
+  const userId = user?.id ?? user?.email;
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -42,13 +50,14 @@ export default function MyAddressesScreen() {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["getUserAddresses"],
+    queryKey: ["getUserAddresses", userId],
     queryFn: getAddresses,
+    enabled: Boolean(isAuthenticated && userId),
     refetchOnMount: false,
   });
 
   const addresses = response?.data ?? [];
-
+  console.log("Addresses:", addresses[0]?._id);
   const handleOpenModal = () => {
     setFormData({ name: "", city: "", details: "", phone: "" });
     setIsModalOpen(true);
@@ -91,7 +100,7 @@ export default function MyAddressesScreen() {
       if (res.success) {
         toast.success(res.message);
         setIsModalOpen(false);
-        queryClient.invalidateQueries({ queryKey: ["getUserAddresses"] });
+        queryClient.invalidateQueries({ queryKey: ["getUserAddresses", userId] });
       } else {
         toast.error(res.message);
       }
@@ -108,7 +117,7 @@ export default function MyAddressesScreen() {
       const res = await removeAddress(id);
       if (res.success) {
         toast.success(res.message);
-        queryClient.invalidateQueries({ queryKey: ["getUserAddresses"] });
+        queryClient.invalidateQueries({ queryKey: ["getUserAddresses", userId] });
       } else {
         toast.error(res.message);
       }
@@ -210,6 +219,12 @@ export default function MyAddressesScreen() {
                     {address.phone}
                   </span>
                 </div>
+                <Link
+                  href={`/profile/myaddresses/${address._id}`}
+                  className="mt-4 inline-flex min-h-10 items-center gap-1.5 rounded-lg px-2 text-sm font-semibold text-primary-700 transition hover:bg-primary-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600">
+                  View address
+                  <IconArrowRight size={16} aria-hidden="true" />
+                </Link>
               </div>
             </div>
           ))}

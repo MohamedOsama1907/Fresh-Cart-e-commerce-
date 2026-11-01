@@ -301,9 +301,9 @@ export default function CartScreen() {
                     <IconTag size={16} aria-hidden="true" /> Apply Promo Code
                   </button>
                 )}
-                <button type="button" className="flex min-h-14 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary-600 to-primary-700 px-5 text-sm font-bold text-white shadow-lg shadow-primary-700/15 transition-colors hover:from-primary-700 hover:to-primary-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700">
+                <Link href="/checkout" className="flex min-h-14 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary-600 to-primary-700 px-5 text-sm font-bold text-white shadow-lg shadow-primary-700/15 transition-colors hover:from-primary-700 hover:to-primary-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700">
                   <IconLock size={17} aria-hidden="true" /> Secure Checkout
-                </button>
+                </Link>
                 <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 pt-1 text-[11px] text-slate-500 sm:text-xs">
                   <span className="inline-flex items-center gap-1.5"><IconShieldCheck size={15} className="text-primary-600" aria-hidden="true" /> Secure Payment</span>
                   <span aria-hidden="true" className="hidden h-4 border-l border-slate-200 sm:block" />

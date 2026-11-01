@@ -3,8 +3,10 @@
 import { cookies } from "next/headers";
 import { apiClient } from "@/services/apiClient";
 import { isAxiosError, type AxiosRequestConfig } from "axios";
+import { getAddressById as fetchAddressById } from "../services/getAddressById";
 import type {
   AddAddressBody,
+  AddressApiResponse,
   AddressesApiResponse,
   UpdateProfileBody,
   ChangePasswordBody,
@@ -17,7 +19,7 @@ function getErrorMessage(error: unknown, fallback: string): string {
   return fallback;
 }
 
-// ─── Addresses ───────────────────────────────────────────────────────────────
+// ─── Addresses ─────────────────────────────────────────────────────────────
 
 export async function getAddresses(): Promise<AddressesApiResponse> {
   const token = (await cookies()).get("token")?.value;
@@ -30,6 +32,14 @@ export async function getAddresses(): Promise<AddressesApiResponse> {
   };
   const { data } = await apiClient.request<AddressesApiResponse>(config);
   return data;
+}
+
+export async function getAddressById(
+  addressId: string,
+): Promise<AddressApiResponse> {
+  const token = (await cookies()).get("token")?.value;
+  if (!token) throw new Error("Please sign in to view this address.");
+  return fetchAddressById(addressId, token);
 }
 
 export async function addAddress(body: AddAddressBody) {
@@ -106,10 +116,13 @@ export async function updateProfile(body: UpdateProfileBody) {
       headers: { token },
       data: body,
     };
-    const { data } = await apiClient.request(config);
+    const { data } = await apiClient.request<{
+      message?: string;
+      user?: UpdateProfileBody;
+    }>(config);
     return {
       success: true as const,
-      message: "Profile updated successfully.",
+      message: data.message ?? "Profile updated successfully.",
       user: data.user,
     };
   } catch (error) {
@@ -121,7 +134,8 @@ export async function updateProfile(body: UpdateProfileBody) {
 }
 
 export async function changePassword(body: ChangePasswordBody) {
-  const token = (await cookies()).get("token")?.value;
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
   if (!token) return { success: false as const, message: "Please sign in." };
 
   try {
@@ -131,10 +145,22 @@ export async function changePassword(body: ChangePasswordBody) {
       headers: { token },
       data: body,
     };
-    await apiClient.request(config);
+    const { data } = await apiClient.request<{
+      message?: string;
+      token?: string;
+    }>(config);
+
+    // The API may issue a fresh token after changing the password.
+    if (data.token) {
+      cookieStore.set("token", data.token, {
+        httpOnly: true,
+        maxAge: 60 * 60 * 24 * 7 * 30,
+      });
+    }
+
     return {
       success: true as const,
-      message: "Password changed successfully.",
+      message: data.message ?? "Password changed successfully.",
     };
   } catch (error) {
     return {

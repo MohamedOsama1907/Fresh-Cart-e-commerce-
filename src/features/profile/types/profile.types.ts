@@ -12,6 +12,11 @@ export interface AddressesApiResponse {
   data: Address[];
 }
 
+export interface AddressApiResponse {
+  status: string;
+  data: Address;
+}
+
 export interface AddAddressBody {
   name: string;
   details: string;

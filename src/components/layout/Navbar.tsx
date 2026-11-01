@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import logo from "../../assets/images/freshcart-logo.svg";
@@ -12,11 +12,13 @@ import {
   IconHeadset,
   IconHeart,
   IconLogout,
+  IconMapPin,
   IconMail,
   IconMenu2,
   IconPhone,
   IconSearch,
   IconShoppingCart,
+  IconSettings,
   IconTruck,
   IconUser,
   IconUserCircle,
@@ -31,12 +33,17 @@ import { motion, useReducedMotion } from "motion/react";
 import { useCartAnimation } from "@/features/cart/components/CartAnimationProvider";
 import { useCart } from "@/features/cart/hooks/useCart";
 
-function WishlistNavLink({ count, mobile = false }: { count?: number; mobile?: boolean }) {
+function isCurrentRoute(pathname: string, href: string) {
+  return pathname === href || (href !== "/" && pathname.startsWith(`${href}/`));
+}
+
+function WishlistNavLink({ count, mobile = false, active = false }: { count?: number; mobile?: boolean; active?: boolean }) {
   return (
     <Link
       href="/wishlist"
+      aria-current={active ? "page" : undefined}
       aria-label={count === undefined ? "Wishlist" : `Wishlist, ${count} items`}
-      className="text-slate-500 transition hover:text-primary-600 focus-visible:rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-600"
+      className={`transition hover:text-primary-600 focus-visible:rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-600 ${active ? "text-primary-700" : "text-slate-500"}`}
     >
       <span className="relative inline-flex">
         <IconHeart size={mobile ? 25 : 23} className={mobile ? "max-[400px]:size-5" : ""} stroke={1.8} />
@@ -59,12 +66,26 @@ const categoryLinks = [
   { href: "/categories/6439d5b90049ad0b52b90048", label: "Men's Fashion" },
   { href: "/categories/6439d30b67d9aa4ca97064b1", label: "Beauty & Health" },
 ];
+
+const profileLinks = [
+  { href: "/profile", label: "My Profile", icon: IconUser },
+  { href: "/myorders", label: "My Orders", icon: IconTruck },
+  { href: "/wishlist", label: "My Wishlist", icon: IconHeart },
+  { href: "/profile/myaddresses", label: "Addresses", icon: IconMapPin },
+  { href: "/profile/settings", label: "Settings", icon: IconSettings },
+];
+
 export default function Navbar() {
   const { registerCartTarget, arrivalId } = useCartAnimation();
   const reducedMotion = useReducedMotion();
   const [categoriesOpenPath, setCategoriesOpenPath] = useState<string | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const categoriesMenuRef = useRef<HTMLDivElement>(null);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const router = useRouter();
+  const isActivePath = (href: string) => isCurrentRoute(pathname, href);
   const isCategoriesOpen = categoriesOpenPath === pathname;
   const { isAuthenticated, user } = useSelector(
     (state: appState) => state.authReducer,
@@ -76,17 +97,26 @@ export default function Navbar() {
   const { logout } = authActions;
   const dispatch = useDispatch();
   useEffect(() => {
+    setMobileMenuOpen(false);
+    setProfileMenuOpen(false);
+  }, [pathname]);
+  useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {
-      if (
-        event.target instanceof Node &&
-        !categoriesMenuRef.current?.contains(event.target)
-      ) {
-        setCategoriesOpenPath(null);
+      if (event.target instanceof Node) {
+        if (!categoriesMenuRef.current?.contains(event.target)) {
+          setCategoriesOpenPath(null);
+        }
+        if (!profileMenuRef.current?.contains(event.target)) {
+          setProfileMenuOpen(false);
+        }
       }
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setCategoriesOpenPath(null);
+      if (event.key === "Escape") {
+        setCategoriesOpenPath(null);
+        setProfileMenuOpen(false);
+      }
     };
 
     document.addEventListener("pointerdown", handlePointerDown);
@@ -97,6 +127,18 @@ export default function Navbar() {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
+
+  const handleLogout = async () => {
+    dispatch(logout());
+    queryClient.removeQueries({ queryKey: ["getWishlist"] });
+    queryClient.removeQueries({ queryKey: ["getUserAddresses"] });
+    queryClient.removeQueries({ queryKey: ["getSpecificAddress"] });
+    await deleteToken();
+    setProfileMenuOpen(false);
+    setMobileMenuOpen(false);
+    router.replace("/login");
+    router.refresh();
+  };
 
   return (
     <>
@@ -131,21 +173,18 @@ export default function Navbar() {
                   <li>
                     <Link
                       href="/profile"
-                      className="flex items-center gap-2 hover:text-primary-600">
-                      <IconUser size={16} /> Account
+                      aria-current={isActivePath("/profile") ? "page" : undefined}
+                      className={`flex items-center gap-2 transition-colors hover:text-primary-600 ${isActivePath("/profile") ? "font-semibold text-primary-700" : ""}`}>
+                      <IconUser size={16} /> {user?.name ?? "Account"}
                     </Link>
                   </li>
-                  <li
-                    onClick={async () => {
-                      dispatch(logout());
-                      queryClient.removeQueries({ queryKey: ["getWishlist"] });
-                      await deleteToken();
-                    }}>
-                    <Link
-                      href="/login"
-                      className="flex items-center gap-2 hover:text-primary-600">
+                  <li>
+                    <button
+                      type="button"
+                      onClick={() => void handleLogout()}
+                      className="flex items-center gap-2 transition-colors hover:text-red-600">
                       <IconLogout size={16} /> Log out
-                    </Link>
+                    </button>
                   </li>
                 </>
               ) : (
@@ -172,7 +211,7 @@ export default function Navbar() {
       </div>
 
       <div className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white text-slate-700">
-        <div className="container mx-auto flex min-h-[72px] items-center gap-2 max-[400px]:gap-1 max-[400px]:px-4 sm:min-h-[80px] sm:gap-4 lg:min-h-[88px] lg:gap-7">
+        <div className="container mx-auto flex min-h-[76px] w-full max-w-screen-2xl items-center gap-2 sm:min-h-[80px] sm:gap-4 lg:min-h-[88px] lg:gap-7">
           <Link href="/" aria-label="FreshCart home" className="shrink-0">
             <Image src={logo} alt="FreshCart" priority className="h-7 w-auto max-[400px]:h-6 sm:h-8 lg:h-9" />
           </Link>
@@ -196,10 +235,10 @@ export default function Navbar() {
           <nav
             aria-label="Main navigation"
             className="hidden items-center gap-4 whitespace-nowrap text-base font-medium lg:flex">
-            <Link href="/" className="transition hover:text-primary-600">
+            <Link href="/" aria-current={isActivePath("/") ? "page" : undefined} className={`relative py-2 transition-colors after:absolute after:inset-x-0 after:-bottom-1 after:h-0.5 after:rounded-full after:bg-primary-600 ${isActivePath("/") ? "font-semibold text-primary-700 after:content-['']" : "text-slate-700 hover:text-primary-600 after:scale-x-0 after:transition-transform after:content-[''] hover:after:scale-x-100"}`}>
               Home
             </Link>
-            <Link href="/shop" className="transition hover:text-primary-600">
+            <Link href="/shop" aria-current={isActivePath("/shop") ? "page" : undefined} className={`relative py-2 transition-colors after:absolute after:inset-x-0 after:-bottom-1 after:h-0.5 after:rounded-full after:bg-primary-600 ${isActivePath("/shop") ? "font-semibold text-primary-700 after:content-['']" : "text-slate-700 hover:text-primary-600 after:scale-x-0 after:transition-transform after:content-[''] hover:after:scale-x-100"}`}>
               Shop
             </Link>
             <div ref={categoriesMenuRef} className="relative">
@@ -211,8 +250,9 @@ export default function Navbar() {
                 }
                 type="button"
                 aria-expanded={isCategoriesOpen}
+                aria-current={isActivePath("/categories") ? "page" : undefined}
                 aria-controls="categories-dropdown"
-                className="flex items-center gap-1.5 transition hover:text-primary-600">
+                className={`relative flex items-center gap-1.5 py-2 transition-colors after:absolute after:inset-x-0 after:-bottom-1 after:h-0.5 after:rounded-full after:bg-primary-600 ${isActivePath("/categories") ? "font-semibold text-primary-700 after:content-['']" : "text-slate-700 hover:text-primary-600 after:scale-x-0 after:transition-transform after:content-[''] hover:after:scale-x-100"}`}>
                 Categories{" "}
                 <IconChevronDown
                   className={`transition-transform duration-200 ${
@@ -233,7 +273,8 @@ export default function Navbar() {
                   <Link
                     href="/categories"
                     onClick={() => setCategoriesOpenPath(null)}
-                    className="block py-2.5 text-base font-medium text-primary-600 transition hover:text-primary-700">
+                    aria-current={pathname === "/categories" ? "page" : undefined}
+                    className={`block rounded-lg px-2 py-2.5 text-base transition-colors hover:text-primary-700 ${pathname === "/categories" ? "bg-primary-50 font-semibold text-primary-700" : "font-medium text-primary-600"}`}>
                     All Categories
                   </Link>
                 </li>
@@ -249,7 +290,7 @@ export default function Navbar() {
                 ))}
               </ul>
             </div>
-            <Link href="/brands" className="transition hover:text-primary-600">
+            <Link href="/brands" aria-current={isActivePath("/brands") ? "page" : undefined} className={`relative py-2 transition-colors after:absolute after:inset-x-0 after:-bottom-1 after:h-0.5 after:rounded-full after:bg-primary-600 ${isActivePath("/brands") ? "font-semibold text-primary-700 after:content-['']" : "text-slate-700 hover:text-primary-600 after:scale-x-0 after:transition-transform after:content-[''] hover:after:scale-x-100"}`}>
               Brands
             </Link>
           </nav>
@@ -257,7 +298,8 @@ export default function Navbar() {
           <div className="ml-auto hidden shrink-0 items-center gap-4 lg:flex">
             <Link
               href="/contact"
-              className="flex items-center gap-2 border-r border-slate-200 pr-5 transition hover:text-primary-600">
+              aria-current={isActivePath("/contact") ? "page" : undefined}
+              className={`flex items-center gap-2 border-r border-slate-200 pr-5 transition-colors hover:text-primary-600 ${isActivePath("/contact") ? "text-primary-700" : ""}`}>
               <span className="flex size-12 items-center justify-center rounded-full bg-primary-50 text-primary-600">
                 <IconHeadset size={22} />
               </span>
@@ -269,11 +311,12 @@ export default function Navbar() {
                 </strong>
               </span>
             </Link>
-            <WishlistNavLink count={isAuthenticated ? wishlistQuery.data?.count : undefined} />
+            <WishlistNavLink count={isAuthenticated ? wishlistQuery.data?.count : undefined} active={isActivePath("/wishlist")} />
             <Link
               href="/cart"
+              aria-current={isActivePath("/cart") ? "page" : undefined}
               aria-label={cartCount === undefined ? "Cart" : `Cart, ${cartCount} items`}
-              className="text-slate-500 transition hover:text-primary-600">
+              className={`transition hover:text-primary-600 ${isActivePath("/cart") ? "text-primary-700" : "text-slate-500"}`}>
               <motion.span
                 ref={(element) => registerCartTarget("desktop", element)}
                 className="relative inline-flex"
@@ -300,12 +343,63 @@ export default function Navbar() {
               </motion.span>
             </Link>
             {isAuthenticated ? (
-              <Link
-                href="/profile"
-                aria-label="Your account"
-                className="text-slate-500 transition hover:text-primary-600 focus-visible:rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-600">
-                <IconUserCircle size={27} stroke={1.8} />
-              </Link>
+              <div ref={profileMenuRef} className="relative">
+                <button
+                  type="button"
+                  aria-label={profileMenuOpen ? "Close profile menu" : "Open profile menu"}
+                  aria-expanded={profileMenuOpen}
+                  aria-controls="profile-dropdown"
+                  onClick={() => setProfileMenuOpen((open) => !open)}
+                  className="text-slate-500 transition hover:text-primary-600 focus-visible:rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-600"
+                >
+                  <IconUserCircle size={27} stroke={1.8} />
+                </button>
+                {profileMenuOpen && (
+                  <div
+                    id="profile-dropdown"
+                    className="absolute right-0 top-full z-50 mt-3 w-72 overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-xl"
+                  >
+                    <div className="flex items-center gap-3 border-b border-slate-100 px-5 py-4">
+                      <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-700">
+                        <IconUserCircle size={27} stroke={1.8} />
+                      </span>
+                      <span className="truncate font-semibold text-slate-800">
+                        {user?.name ?? user?.email ?? "My Account"}
+                      </span>
+                    </div>
+                    <nav aria-label="Profile menu" className="py-2">
+                      <ul>
+                        {profileLinks.map(({ href, label, icon: Icon }) => (
+                          <li key={href}>
+                            <Link
+                              href={href}
+                              aria-current={isActivePath(href) ? "page" : undefined}
+                              onClick={() => setProfileMenuOpen(false)}
+                              className={`flex items-center gap-3 px-5 py-2.5 text-sm transition-colors hover:bg-slate-50 hover:text-primary-700 ${isActivePath(href) ? "font-semibold text-primary-700" : "text-slate-600"}`}
+                            >
+                              <Icon size={19} stroke={1.9} aria-hidden="true" />
+                              {label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </nav>
+                    <div className="border-t border-slate-100 p-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setProfileMenuOpen(false);
+                          void handleLogout();
+                        }}
+                        className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-red-600 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                      >
+                        <IconLogout size={19} stroke={1.9} aria-hidden="true" />
+                        Sign Out
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             ) : (
               <Link
                 href="/login"
@@ -315,12 +409,13 @@ export default function Navbar() {
             )}
           </div>
 
-          <div className="ml-auto flex shrink-0 items-center gap-2 max-[400px]:gap-1.5 lg:hidden sm:gap-4">
-            <WishlistNavLink count={isAuthenticated ? wishlistQuery.data?.count : undefined} mobile />
+          <div className="ml-auto flex shrink-0 items-center gap-5 lg:hidden sm:gap-6">
+            <WishlistNavLink count={isAuthenticated ? wishlistQuery.data?.count : undefined} mobile active={isActivePath("/wishlist")} />
             <Link
               href="/cart"
+              aria-current={isActivePath("/cart") ? "page" : undefined}
               aria-label={cartCount === undefined ? "Cart" : `Cart, ${cartCount} items`}
-              className="text-slate-500 transition hover:text-primary-600">
+              className={`transition hover:text-primary-600 ${isActivePath("/cart") ? "text-primary-700" : "text-slate-500"}`}>
               <motion.span
                 ref={(element) => registerCartTarget("mobile", element)}
                 className="relative inline-flex"
@@ -328,7 +423,7 @@ export default function Navbar() {
                 animate={arrivalId > 0 && !reducedMotion ? { scale: [1, 1.2, 0.92, 1] } : undefined}
                 transition={{ duration: 0.35 }}
               >
-                <IconShoppingCart size={25} className="max-[400px]:size-5" stroke={1.8} />
+                <IconShoppingCart size={25} stroke={1.8} />
                 {cartCount !== undefined && cartCount > 0 && (
                   <span aria-hidden="true" className="absolute -right-2 -top-2 inline-flex min-h-4 min-w-4 items-center justify-center rounded-full bg-rose-600 px-1 text-[10px] font-bold leading-none text-white ring-2 ring-white">
                     {cartCount > 99 ? "99+" : cartCount}
@@ -346,30 +441,65 @@ export default function Navbar() {
                 )}
               </motion.span>
             </Link>
-            {isAuthenticated ? (
-              <Link
-                href="/profile"
-                aria-label="Your account"
-                className="text-slate-500 transition hover:text-primary-600 focus-visible:rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-600">
-                <IconUserCircle size={27} className="max-[400px]:size-5" stroke={1.8} />
-              </Link>
-            ) : (
-              <Link
-                href="/login"
-                aria-label="Sign In"
-                className="flex h-10 items-center gap-1.5 rounded-full bg-primary-600 px-3 text-[13px] font-semibold text-white shadow-sm transition hover:bg-primary-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700 max-[400px]:px-2">
-                <IconUser size={16} />
-                <span className="max-[400px]:sr-only">Sign In</span>
-              </Link>
-            )}
             <button
               type="button"
-              aria-label="Open menu"
-              className="flex size-12 items-center justify-center rounded-full bg-primary-600 text-white max-[400px]:size-10">
-              <IconMenu2 size={23} className="max-[400px]:size-5" />
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-navigation"
+              onClick={() => setMobileMenuOpen((open) => !open)}
+              className="flex size-[50px] items-center justify-center rounded-full bg-primary-600 text-white transition hover:bg-primary-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700">
+              <IconMenu2 size={24} />
             </button>
           </div>
         </div>
+        {mobileMenuOpen && (
+          <nav
+            id="mobile-navigation"
+            aria-label="Mobile navigation"
+            className="border-t border-slate-100 bg-white px-6 py-3 shadow-lg lg:hidden">
+            <ul className="mx-auto flex max-w-7xl flex-col">
+              {[
+                ["Home", "/"],
+                ["Shop", "/shop"],
+                ["Categories", "/categories"],
+                ["Brands", "/brands"],
+                ["Contact", "/contact"],
+              ].map(([label, href]) => (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    aria-current={isActivePath(href) ? "page" : undefined}
+                    className={`block border-b border-slate-100 py-3 transition-colors hover:text-primary-700 ${isActivePath(href) ? "font-semibold text-primary-700" : "text-slate-700"}`}>
+                    {label}
+                  </Link>
+                </li>
+              ))}
+              {isAuthenticated ? (
+                <>
+                  <li>
+                    <Link href="/profile" className="block border-b border-slate-100 py-3 text-slate-700 hover:text-primary-700">
+                      Account
+                    </Link>
+                  </li>
+                  <li>
+                    <button
+                      type="button"
+                      onClick={() => void handleLogout()}
+                      className="group flex w-full items-center gap-3 rounded-xl p-2 text-left text-slate-600 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
+                      Log out
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <li>
+                  <Link href="/login" className="block py-3 text-slate-700 hover:text-primary-700">
+                    Sign In / Sign Up
+                  </Link>
+                </li>
+              )}
+            </ul>
+          </nav>
+        )}
       </div>
     </>
   );

@@ -1,7 +1,11 @@
+import type { Metadata } from "next";
+import MyOrdersScreen from "@/features/orders/components/MyOrdersScreen";
+
+export const metadata: Metadata = {
+  title: "My Orders | FreshCart",
+  description: "View and track your FreshCart orders.",
+};
+
 export default function MyOrdersPage() {
-  return (
-    <div className="p-3 bg-gray-200 text-center text-xl font-semibold">
-      <h2>My Orders Page</h2>
-    </div>
-  );
+  return <MyOrdersScreen />;
 }
