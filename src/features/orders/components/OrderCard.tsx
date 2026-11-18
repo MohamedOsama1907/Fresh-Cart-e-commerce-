@@ -227,9 +227,9 @@ export default function OrderCard({ order }: { order: UserOrder }) {
               )}
             </section>
 
-            <section className="rounded-xl border border-amber-200 bg-amber-100/80 p-4">
+            <section className="rounded-xl border border-slate-200/80 bg-white p-4">
               <h3 className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-                <span className="flex size-7 items-center justify-center rounded-lg bg-amber-500 text-white">
+                <span className="flex size-7 items-center justify-center rounded-lg bg-primary-50 text-primary-600">
                   <IconClock aria-hidden="true" className="size-4" />
                 </span>
                 Order Summary
@@ -247,9 +247,9 @@ export default function OrderCard({ order }: { order: UserOrder }) {
                     {order.isPaid ? "Paid" : "Pending"}
                   </dd>
                 </div>
-                <div className="flex items-center justify-between gap-3 border-t border-amber-200 pt-3 font-semibold text-slate-900">
+                <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3 font-semibold text-slate-900">
                   <dt>Total</dt>
-                  <dd>{formatPrice(order.totalOrderPrice)}</dd>
+                  <dd className="text-primary-700">{formatPrice(order.totalOrderPrice)}</dd>
                 </div>
               </dl>
             </section>

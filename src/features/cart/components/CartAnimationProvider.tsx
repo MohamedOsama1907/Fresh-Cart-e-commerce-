@@ -52,7 +52,7 @@ export function CartAnimationProvider({ children }: { children: ReactNode }) {
       void queryClient.invalidateQueries({ queryKey: cartQueryPrefix });
       const pending = pendingFlight.current;
       pendingFlight.current = null;
-      if (!pending || reducedMotion) return;
+      if (!pending || reducedMotion || !pending.image) return;
 
       requestAnimationFrame(() => {
         const targetElement = Object.values(targets.current).find((element) => {

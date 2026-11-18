@@ -41,7 +41,10 @@ function getPaginationItems(currentPage: number, totalPages: number) {
 }
 
 function pageHref(basePath: string, page: number) {
-  return `${basePath}?page=${page}`;
+  const [pathname, query = ""] = basePath.split("?", 2);
+  const searchParams = new URLSearchParams(query);
+  searchParams.set("page", String(page));
+  return `${pathname}?${searchParams.toString()}`;
 }
 
 export default function Pagination({

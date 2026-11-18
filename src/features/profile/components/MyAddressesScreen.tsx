@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import Link from "next/link";
@@ -57,7 +57,17 @@ export default function MyAddressesScreen() {
   });
 
   const addresses = response?.data ?? [];
-  console.log("Addresses:", addresses[0]?._id);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isModalOpen && !isSubmitting) {
+        setIsModalOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isModalOpen, isSubmitting]);
+
   const handleOpenModal = () => {
     setFormData({ name: "", city: "", details: "", phone: "" });
     setIsModalOpen(true);
@@ -144,7 +154,7 @@ export default function MyAddressesScreen() {
         <button
           type="button"
           onClick={handleOpenModal}
-          className="inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-700">
+          className="inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600">
           <IconPlus size={18} stroke={2.5} />
           Add Address
         </button>
@@ -160,7 +170,6 @@ export default function MyAddressesScreen() {
           onRetry={() => void refetch()}
         />
       ) : addresses.length === 0 ? (
-        /* Empty State (Matches Screenshot 1) */
         <div className="flex flex-col items-center justify-center rounded-2xl border border-slate-100 bg-white p-12 text-center shadow-sm sm:p-20">
           <div className="mb-5 flex size-16 items-center justify-center rounded-full bg-slate-100 text-slate-400">
             <IconMapPin size={30} stroke={2} />
@@ -176,7 +185,7 @@ export default function MyAddressesScreen() {
           <button
             type="button"
             onClick={handleOpenModal}
-            className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-primary-600 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-primary-600/25 transition hover:bg-primary-700">
+            className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-primary-600 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-primary-600/25 transition hover:bg-primary-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600">
             <IconPlus size={18} stroke={2.5} />
             Add Your First Address
           </button>
@@ -200,7 +209,7 @@ export default function MyAddressesScreen() {
                     onClick={() => handleDelete(address._id)}
                     disabled={deletingId === address._id}
                     aria-label={`Delete address ${address.name}`}
-                    className="cursor-pointer rounded-lg p-1.5 text-slate-400 transition hover:bg-red-50 hover:text-red-500 disabled:opacity-50">
+                    className="cursor-pointer rounded-lg p-1.5 text-slate-400 transition hover:bg-rose-50 hover:text-rose-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-600 disabled:opacity-50">
                     <IconTrash size={16} stroke={2} />
                   </button>
                 </div>
@@ -256,7 +265,7 @@ export default function MyAddressesScreen() {
                 onClick={handleCloseModal}
                 disabled={isSubmitting}
                 aria-label="Close modal"
-                className="cursor-pointer rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 disabled:opacity-50">
+                className="cursor-pointer rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:opacity-50">
                 <IconX size={20} />
               </button>
             </div>
@@ -345,13 +354,13 @@ export default function MyAddressesScreen() {
                   type="button"
                   onClick={handleCloseModal}
                   disabled={isSubmitting}
-                  className="cursor-pointer rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50 disabled:opacity-50">
+                  className="cursor-pointer rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:opacity-50">
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="cursor-pointer rounded-xl bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-700 disabled:opacity-50">
+                  className="cursor-pointer rounded-xl bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:opacity-50">
                   {isSubmitting ? "Saving..." : "Save Address"}
                 </button>
               </div>

@@ -4,10 +4,10 @@ export interface Product {
   slug: string;
   price: number;
   priceAfterDiscount?: number;
-  imageCover: string;
-  ratingsAverage: number;
-  ratingsQuantity: number;
-  category: {
+  imageCover?: string;
+  ratingsAverage?: number;
+  ratingsQuantity?: number;
+  category?: {
     _id: string;
     name: string;
   };

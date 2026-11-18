@@ -57,26 +57,24 @@ function RatingStars({ rating, size = 16 }: { rating: number; size?: number }) {
 }
 
 function DetailsPanel({ product }: ProductInformationTabsProps) {
-  const description = product.description.replace(/\s+/g, " ").trim();
-  const attributes = product.description
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line, index) => {
-      const [label, ...valueParts] = line.split(/\t+/);
-      return valueParts.length > 0
-        ? { label: label.trim(), value: valueParts.join(" ").trim() }
-        : { label: `Detail ${index + 1}`, value: line };
-    });
+  const description = product.description?.trim();
 
   const information = [
-    { label: "Category", value: product.category.name },
+    { label: "Category", value: product.category?.name || "General" },
     {
       label: "Subcategory",
-      value: product.subcategory.map(({ name }) => name).join(", ") || "—",
+      value: product.subcategory?.map(({ name }) => name).join(", ") || "—",
     },
-    { label: "Brand", value: product.brand.name },
-    { label: "Items Sold", value: `${product.sold.toLocaleString("en-US")}+ sold` },
+    { label: "Brand", value: product.brand?.name || "Generic" },
+    { label: "Stock Availability", value: product.quantity > 0 ? `${product.quantity} in stock` : "Out of stock" },
+    { label: "Items Sold", value: `${product.sold?.toLocaleString("en-US") || 0}+ sold` },
+  ];
+
+  const highlights = [
+    "100% Genuine and authentic product",
+    "Carefully packed and quality checked",
+    "Fast delivery to your address",
+    "14-day return and refund policy",
   ];
 
   return (
@@ -88,7 +86,7 @@ function DetailsPanel({ product }: ProductInformationTabsProps) {
 
       <div className="mt-6 grid gap-4 md:grid-cols-2">
         <section aria-labelledby="product-information-heading" className="rounded-xl bg-slate-50 p-4 sm:p-5">
-          <h3 id="product-information-heading" className="font-medium text-slate-900">Product Information</h3>
+          <h3 id="product-information-heading" className="font-medium text-slate-900">Product Specifications</h3>
           <dl className="mt-3 space-y-2.5 text-sm">
             {information.map(({ label, value }) => (
               <div key={label} className="flex items-start justify-between gap-4">
@@ -100,22 +98,15 @@ function DetailsPanel({ product }: ProductInformationTabsProps) {
         </section>
 
         <section aria-labelledby="product-features-heading" className="rounded-xl bg-slate-50 p-4 sm:p-5">
-          <h3 id="product-features-heading" className="font-medium text-slate-900">Key Features</h3>
-          {attributes.length > 0 ? (
-            <dl className="mt-3 space-y-2.5 text-sm">
-              {attributes.map(({ label, value }, index) => (
-                <div key={`${label}-${index}`} className="flex items-start gap-2.5">
-                  <IconCheck size={17} className="mt-0.5 shrink-0 text-primary-600" aria-hidden="true" />
-                  <div className="flex flex-wrap gap-x-1.5">
-                    <dt className="font-medium text-slate-700">{label}</dt>
-                    <dd className="text-slate-600">{value}</dd>
-                  </div>
-                </div>
-              ))}
-            </dl>
-          ) : (
-            <p className="mt-3 text-sm text-slate-500">No additional product features are listed.</p>
-          )}
+          <h3 id="product-features-heading" className="font-medium text-slate-900">Highlights &amp; Guarantees</h3>
+          <ul className="mt-3 space-y-2.5 text-sm">
+            {highlights.map((item) => (
+              <li key={item} className="flex items-center gap-2.5 text-slate-700">
+                <IconCheck size={17} className="shrink-0 text-primary-600" aria-hidden="true" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
         </section>
       </div>
     </div>

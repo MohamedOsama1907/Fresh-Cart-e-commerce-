@@ -49,19 +49,27 @@ export default function SpecificSubcategoryScreen({ id }: SpecificSubcategoryScr
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-primary-600">
                 Subcategory
               </p>
-              <h1 className="mt-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+              <h2 className="mt-3 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
                 {subcategory.name}
-              </h1>
+              </h2>
               <p className="mt-4 leading-7 text-slate-600">
                 Explore the {subcategory.name} collection in the Fresh Cart catalog.
               </p>
-              <Link
-                href="/subcategories"
-                className="mt-7 inline-flex min-h-11 items-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 font-semibold text-slate-700 transition-colors hover:border-primary-300 hover:text-primary-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
-              >
-                <IconArrowLeft size={18} aria-hidden="true" />
-                All subcategories
-              </Link>
+              <div className="mt-7 flex flex-wrap items-center gap-3">
+                <Link
+                  href="/shop"
+                  className="inline-flex min-h-11 items-center justify-center rounded-xl bg-primary-600 px-5 py-2.5 font-semibold text-white shadow-sm transition hover:bg-primary-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+                >
+                  Browse Products
+                </Link>
+                <Link
+                  href="/subcategories"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 font-semibold text-slate-700 transition-colors hover:border-primary-300 hover:text-primary-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+                >
+                  <IconArrowLeft size={18} aria-hidden="true" />
+                  All subcategories
+                </Link>
+              </div>
             </section>
           </main>
         </>

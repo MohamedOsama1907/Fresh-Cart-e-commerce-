@@ -133,11 +133,11 @@ export default function CartScreen() {
                   return (
                     <article key={item._id} className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:p-5">
                       <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
-                        <div className="flex shrink-0 items-center gap-3 sm:block">
+                        <div className="flex shrink-0 items-center gap-3 sm:flex-col sm:items-center">
                           <Link href={`/products/${product._id}`} aria-label={`View ${product.title}`} className="relative size-24 shrink-0 overflow-hidden rounded-xl border border-slate-100 bg-slate-50 sm:size-32">
                             <Image src={product.imageCover} alt={product.title} fill unoptimized sizes="(max-width: 639px) 96px, 128px" className="object-contain p-2" />
                           </Link>
-                          <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold text-white sm:ml-12 sm:mt-3 ${product.quantity > 0 ? "bg-emerald-500" : "bg-slate-400"}`}>
+                          <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold text-white sm:mt-2 ${product.quantity > 0 ? "bg-emerald-500" : "bg-slate-400"}`}>
                             <IconCheck size={12} stroke={3} aria-hidden="true" />
                             {product.quantity > 0 ? "In Stock" : "Out of Stock"}
                           </span>
@@ -220,7 +220,7 @@ export default function CartScreen() {
               </div>
             </section>
 
-            <aside aria-labelledby="order-summary-title" className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-md">
+            <aside aria-labelledby="order-summary-title" className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-md lg:sticky lg:top-24">
               <div className="bg-gradient-to-r from-primary-600 to-primary-700 px-5 py-4 text-white sm:px-6">
                 <h2 id="order-summary-title" className="flex items-center gap-2 text-lg font-bold"><IconLock size={18} aria-hidden="true" /> Order Summary</h2>
                 <p className="mt-1 text-sm text-white/90">{cart.numOfCartItems} {cart.numOfCartItems === 1 ? "item" : "items"} in your cart</p>

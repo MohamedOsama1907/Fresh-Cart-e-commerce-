@@ -3,22 +3,23 @@
 import { apiClient } from "@/services/apiClient";
 import { AxiosRequestConfig } from "axios";
 import { cookies } from "next/headers";
+
 export async function deleteToken(): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.delete("token");
 }
-// TODO: edit type
+
 export async function verifyToken(): Promise<{
   isAuthenticated: boolean;
   user: null | {
-    id?: any;
-    name?: any;
-    role?: any;
+    id?: string;
+    name?: string;
+    role?: string;
   };
 }> {
   const cookieStore = await cookies();
   const token = cookieStore.get("token");
-  console.log(token?.value);
+
   if (!token) {
     return {
       isAuthenticated: false,
@@ -52,7 +53,7 @@ export async function verifyToken(): Promise<{
         user: null,
       };
     }
-  } catch (error) {
+  } catch {
     return {
       isAuthenticated: false,
       user: null,

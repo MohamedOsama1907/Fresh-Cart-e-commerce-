@@ -210,15 +210,15 @@ function SectionHeading({ id, icon, title, subtitle }: { id: string; icon: React
 type FieldName = keyof CheckoutShippingAddressValues;
 function CheckoutField({ label, name, placeholder, icon, error, register, autoComplete, type = "text", multiline = false }: { label: string; name: FieldName; placeholder: string; icon: ReactNode; error?: string; register: UseFormRegister<CheckoutShippingAddressValues>; autoComplete: string; type?: string; multiline?: boolean }) {
   const id = `checkout-${name}`;
-  const className = `w-full min-w-0 rounded-xl border ${error ? "border-red-400" : "border-slate-200"} bg-white py-3 pl-12 pr-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-100`;
+  const className = `w-full min-w-0 rounded-xl border ${error ? "border-rose-300 bg-rose-50/20 focus:border-rose-500 focus:ring-rose-100" : "border-slate-200 bg-white focus:border-primary-500 focus:ring-primary-100"} py-3 pl-13 pr-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:ring-2`;
   return (
     <div className="min-w-0">
-      <label htmlFor={id} className="mb-2 block text-xs font-semibold text-slate-700 sm:text-sm">{label} <span className="text-red-500" aria-hidden="true">*</span></label>
+      <label htmlFor={id} className="mb-2 block text-xs font-semibold text-slate-700 sm:text-sm">{label} <span className="text-rose-500" aria-hidden="true">*</span></label>
       <div className="relative">
-        <span className={`absolute left-3.5 z-10 flex size-7 items-center justify-center rounded-lg bg-slate-100 text-slate-500 ${multiline ? "top-3" : "top-1/2 -translate-y-1/2"}`} aria-hidden="true">{icon}</span>
+        <span className={`absolute left-3 z-10 flex size-8 items-center justify-center rounded-lg bg-slate-100 text-slate-500 ${multiline ? "top-3" : "top-1/2 -translate-y-1/2"}`} aria-hidden="true">{icon}</span>
         {multiline ? <textarea id={id} rows={3} placeholder={placeholder} autoComplete={autoComplete} aria-invalid={Boolean(error)} aria-describedby={error ? `${id}-error` : undefined} className={`${className} min-h-24 resize-y`} {...register(name)} /> : <input id={id} type={type} placeholder={placeholder} autoComplete={autoComplete} aria-invalid={Boolean(error)} aria-describedby={error ? `${id}-error` : undefined} className={`min-h-12 ${className}`} {...register(name)} />}
       </div>
-      {error && <p id={`${id}-error`} role="alert" className="mt-1.5 text-xs text-red-600">{error}</p>}
+      {error && <p id={`${id}-error`} role="alert" className="mt-1.5 text-xs font-medium text-rose-600">{error}</p>}
     </div>
   );
 }

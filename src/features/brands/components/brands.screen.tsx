@@ -20,8 +20,8 @@ export default function BrandsScreen({ page }: BrandsScreenProps) {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["getAllBrands", page, 10],
-    queryFn: () => getAllBrands(page, 10),
+    queryKey: ["getAllBrands", page, 18],
+    queryFn: () => getAllBrands(page, 18),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
   });
@@ -30,34 +30,38 @@ export default function BrandsScreen({ page }: BrandsScreenProps) {
     <>
       <PageHeader
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Brands" }]}
-        title="Top Brands"
-        subtitle="Shop from your favorite brands"
+        title="Featured Brands"
+        subtitle="Discover trusted quality from leading local and international brands"
         icon={<IconTag size={38} stroke={2.2} />}
-        background="linear-gradient(90deg, #8b5cf6 0%, #9333ea 50%, #a855f7 100%)"
-        iconBackgroundColor="rgba(255, 255, 255, 0.22)"
       />
 
       {isLoading ? (
-        <Loader message="Loading brands..." />
+        <main className="min-h-[60vh] bg-slate-50/70 py-16 flex items-center justify-center">
+          <Loader message="Loading brands..." />
+        </main>
       ) : isError ? (
-        <Error
-          title="Brands are unavailable"
-          message={error.message}
-          onRetry={() => void refetch()}
-        />
+        <main className="min-h-[60vh] bg-slate-50/70 py-16">
+          <div className="container mx-auto max-w-2xl">
+            <Error
+              title="Brands are unavailable"
+              message={error.message}
+              onRetry={() => void refetch()}
+            />
+          </div>
+        </main>
       ) : response ? (
         <main
-          className="min-h-[50vh] bg-slate-50/50 py-8 sm:py-10"
+          className="min-h-[55vh] bg-slate-50/70 py-7 sm:py-10"
           aria-busy={isFetching}>
           <div className="container mx-auto">
             {response.data.length > 0 ? (
               <>
-                <div className="grid grid-cols-2 gap-4 min-[480px]:grid-cols-3 sm:gap-5 md:grid-cols-4 lg:grid-cols-6">
+                <div className="grid grid-cols-2 gap-3 min-[440px]:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-6">
                   {response.data.map((brand) => (
                     <Link
                       key={brand._id}
                       href={`/brands/${brand._id}`}
-                      className="group flex flex-col items-center justify-between rounded-2xl border border-slate-100 bg-white p-3.5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-purple-200 hover:shadow-md sm:p-4">
+                      className="group flex flex-col items-center justify-between rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs transition duration-200 hover:-translate-y-1 hover:border-primary-300 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600">
                       <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-slate-50/80 p-3 flex items-center justify-center">
                         <Image
                           src={brand.image}
@@ -65,10 +69,10 @@ export default function BrandsScreen({ page }: BrandsScreenProps) {
                           fill
                           unoptimized
                           sizes="(max-width: 479px) 50vw, (max-width: 767px) 33vw, (max-width: 1023px) 25vw, 16vw"
-                          className="object-contain p-3 transition-transform duration-300 group-hover:scale-105"
+                          className="object-contain p-2.5 transition-transform duration-300 group-hover:scale-108"
                         />
                       </div>
-                      <span className="mt-3 text-center text-xs font-semibold tracking-wide text-slate-800 transition-colors group-hover:text-purple-600 sm:text-sm">
+                      <span className="mt-3 text-center text-xs font-bold tracking-tight text-slate-800 transition-colors group-hover:text-primary-700 sm:text-sm line-clamp-1">
                         {brand.name}
                       </span>
                     </Link>
@@ -82,9 +86,11 @@ export default function BrandsScreen({ page }: BrandsScreenProps) {
                 />
               </>
             ) : (
-              <p className="rounded-xl border border-slate-200 bg-white p-8 text-center text-slate-600">
-                No brands were found.
-              </p>
+              <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-xs">
+                <IconTag size={36} className="mx-auto text-slate-300" stroke={1.5} />
+                <h3 className="mt-3 text-base font-bold text-slate-800">No brands found</h3>
+                <p className="mt-1 text-xs text-slate-500">Check back later for newly added brands.</p>
+              </div>
             )}
           </div>
         </main>

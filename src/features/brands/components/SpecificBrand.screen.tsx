@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { IconFilter, IconTag, IconX } from "@tabler/icons-react";
+import { IconFilter, IconTag } from "@tabler/icons-react";
 import Error from "@/components/Error/Error";
 import Loader from "@/components/Loader/Loader";
 import Link from "next/link";
@@ -27,14 +27,18 @@ export default function BrandDetailsScreen({
     refetchOnMount: false,
   });
   const productsQuery = useQuery({
-    queryKey: ["getProductsByBrand", id, page, 10],
-    queryFn: () => getProductsByBrand(id, page, 10),
+    queryKey: ["getProductsByBrand", id, page, 12],
+    queryFn: () => getProductsByBrand(id, page, 12),
     enabled: Boolean(id),
     refetchOnMount: false,
   });
 
   if (brandQuery.isLoading || productsQuery.isLoading) {
-    return <Loader message="Loading brand products..." />;
+    return (
+      <main className="min-h-[60vh] bg-slate-50/70 py-16 flex items-center justify-center">
+        <Loader message="Loading brand collection..." />
+      </main>
+    );
   }
 
   if (brandQuery.isError || productsQuery.isError) {
@@ -43,14 +47,18 @@ export default function BrandDetailsScreen({
       productsQuery.error?.message ??
       "Please try again.";
     return (
-      <Error
-        title="Brand products are unavailable"
-        message={errorMessage}
-        onRetry={() => {
-          void brandQuery.refetch();
-          void productsQuery.refetch();
-        }}
-      />
+      <main className="min-h-[60vh] bg-slate-50/70 py-16">
+        <div className="container mx-auto max-w-2xl">
+          <Error
+            title="Brand products are unavailable"
+            message={errorMessage}
+            onRetry={() => {
+              void brandQuery.refetch();
+              void productsQuery.refetch();
+            }}
+          />
+        </div>
+      </main>
     );
   }
 
@@ -68,51 +76,46 @@ export default function BrandDetailsScreen({
           { label: brand.name },
         ]}
         title={brand.name}
-        subtitle={`Explore products from ${brand.name}`}
+        subtitle={`Explore all official products from ${brand.name}`}
         image={brand.image}
         imageAlt={`${brand.name} logo`}
-        backgroundColor="#16a34a"
-        iconBackgroundColor="rgba(255, 255, 255, 0.92)"
+        iconBackgroundColor="rgba(255, 255, 255, 0.95)"
       />
 
       <main
-        className="min-h-[50vh] bg-slate-50/60 py-8 sm:py-10"
+        className="min-h-[55vh] bg-slate-50/70 py-7 sm:py-10"
         aria-busy={productsQuery.isFetching}
       >
         <div className="container mx-auto">
-          <div className="mb-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm sm:mb-6">
-            <IconFilter aria-hidden="true" className="text-slate-600" size={18} />
-            <span className="font-medium text-slate-600">Active Filters:</span>
-            <Link
-              href="/shop"
-              aria-label={`Remove ${brand.name} filter and browse all products`}
-              className="inline-flex min-h-8 items-center gap-2 rounded-full bg-violet-100 px-3 text-violet-800 transition-colors hover:bg-violet-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-600"
-            >
-              <IconTag size={14} aria-hidden="true" />
+          {/* Active Filter Pill */}
+          <div className="mb-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs sm:text-sm">
+            <span className="flex items-center gap-1.5 font-bold text-slate-700">
+              <IconFilter size={16} className="text-primary-600" aria-hidden="true" />
+              Active Brand:
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-primary-200 bg-primary-50 px-3 py-1 font-semibold text-primary-700">
+              <IconTag size={13} aria-hidden="true" />
               {brand.name}
-              <IconX size={15} aria-hidden="true" />
-            </Link>
+            </span>
             <Link
               href="/shop"
-              className="ml-1 text-slate-600 underline underline-offset-2 transition-colors hover:text-primary-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+              className="ml-1 text-slate-500 underline underline-offset-2 transition hover:text-primary-700 focus-visible:outline-2 focus-visible:outline-primary-600"
             >
-              Clear all
+              Browse all brands
             </Link>
           </div>
 
-          <p className="mb-5 text-sm text-slate-600 sm:mb-6">
-            Showing {response.data.length} products
+          <p className="mb-5 text-xs sm:text-sm font-semibold text-slate-500">
+            Showing <span className="font-bold text-slate-900">{response.data.length}</span> products
           </p>
 
           {response.data.length > 0 ? (
             <>
-              <ul className="grid grid-cols-1 gap-3 min-[430px]:grid-cols-2 sm:gap-4 md:grid-cols-3 xl:grid-cols-5">
+              <div className="grid grid-cols-1 gap-3.5 min-[440px]:grid-cols-2 sm:gap-4 md:grid-cols-3 xl:grid-cols-4">
                 {response.data.map((product) => (
-                  <li key={product._id}>
-                    <ProductCard product={product} className="h-full" compact />
-                  </li>
+                  <ProductCard key={product._id} product={product} compact />
                 ))}
-              </ul>
+              </div>
               <Pagination
                 currentPage={page}
                 totalPages={response.metadata.numberOfPages}
@@ -120,9 +123,20 @@ export default function BrandDetailsScreen({
               />
             </>
           ) : (
-            <p className="rounded-2xl border border-slate-200 bg-white p-8 text-center text-slate-600">
-              No products were found for {brand.name}.
-            </p>
+            <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-xs">
+              <IconTag size={36} className="mx-auto text-slate-300" stroke={1.5} />
+              <h3 className="mt-3 text-base font-bold text-slate-800">
+                No products found for {brand.name}
+              </h3>
+              <p className="mt-1 text-xs text-slate-500">
+                Try exploring other brands or our all-products catalog.
+              </p>
+              <Link
+                href="/shop"
+                className="mt-4 inline-flex items-center justify-center rounded-xl bg-primary-600 px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-primary-700">
+                Continue Shopping
+              </Link>
+            </div>
           )}
         </div>
       </main>

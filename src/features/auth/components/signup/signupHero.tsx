@@ -10,10 +10,10 @@ export default function SignupHero() {
   return (
     <div className="min-w-0 py-5 sm:py-7 lg:py-8">
       <div className="mx-auto w-full max-w-2xl">
-        <h1 className="text-3xl font-extrabold leading-tight sm:text-4xl max-w-1/2 md:max-w-full">
-          Welcome to  <span className=" text-primary-600">FreshCart</span>
+        <h1 className="text-3xl font-extrabold leading-tight text-slate-900 sm:text-4xl">
+          Welcome to <span className="text-primary-600">FreshCart</span>
         </h1>
-        <p className="mb-4 mt-2 text-meduim  leading-7 text-slate-600 sm:text-lg">
+        <p className="mb-4 mt-2 text-base leading-7 text-slate-600 sm:text-lg">
           Join thousands of happy customers who enjoy fresh groceries delivered
           right to their doorstep.
         </p>
@@ -23,10 +23,10 @@ export default function SignupHero() {
               <IconStarFilled />
             </div>
             <div className="content min-w-0">
-              <h2 className="text-base font-semibold sm:text-lg">
+              <h2 className="text-base font-semibold text-slate-900 sm:text-lg">
                 Premium Quality
               </h2>
-              <p className="text-sm leading-6 text-gray-600 sm:text-base">
+              <p className="text-sm leading-6 text-slate-600 sm:text-base">
                 Premium quality products sourced from trusted suppliers.
               </p>
             </div>
@@ -37,10 +37,10 @@ export default function SignupHero() {
               <IconTruckFilled />
             </div>
             <div className="content min-w-0">
-              <h2 className="text-base font-semibold sm:text-lg">
+              <h2 className="text-base font-semibold text-slate-900 sm:text-lg">
                 Fast Delivery
               </h2>
-              <p className="text-sm leading-6 text-gray-600 sm:text-base">
+              <p className="text-sm leading-6 text-slate-600 sm:text-base">
                 Same-day delivery available in most areas
               </p>
             </div>
@@ -51,41 +51,41 @@ export default function SignupHero() {
               <IconShieldHalfFilled />
             </div>
             <div className="content min-w-0">
-              <h2 className="text-base font-semibold sm:text-lg">
+              <h2 className="text-base font-semibold text-slate-900 sm:text-lg">
                 Secure Shopping
               </h2>
-              <p className="text-sm leading-6 text-gray-600 sm:text-base">
+              <p className="text-sm leading-6 text-slate-600 sm:text-base">
                 Your data and payments are completely secure
               </p>
             </div>
           </li>
         </ul>
 
-        <div className="review rounded-xl border border-slate-100 bg-white p-4 shadow-sm sm:p-5">
+        <div className="review rounded-xl border border-slate-200/80 bg-white p-4 shadow-sm sm:p-5">
           <div className="author mb-3 flex items-center gap-3 sm:mb-4 sm:gap-4">
             <Image
               src={reviewAuthorImg}
-              alt=""
+              alt="Sarah Johnson profile"
               className="size-12 rounded-full"
             />
             <div className="min-w-0">
-              <h3 className="text-sm font-semibold sm:text-base">
+              <h3 className="text-sm font-semibold text-slate-900 sm:text-base">
                 Sarah Johnson
               </h3>
-              <div className="rating flex *:text-yellow-300">
-                <IconStarFilled size={19} />
-                <IconStarFilled size={19} />
-                <IconStarFilled size={19} />
-                <IconStarFilled size={19} />
-                <IconStarFilled size={19} />
+              <div className="rating flex *:text-amber-400">
+                <IconStarFilled size={18} />
+                <IconStarFilled size={18} />
+                <IconStarFilled size={18} />
+                <IconStarFilled size={18} />
+                <IconStarFilled size={18} />
               </div>
             </div>
           </div>
           <blockquote>
-            <p className="text-sm italic leading-6 text-gray-600 sm:text-base">
-              "FreshCart has transformed my shopping experience. The quality of
+            <p className="text-sm italic leading-6 text-slate-600 sm:text-base">
+              &quot;FreshCart has transformed my shopping experience. The quality of
               the products is outstanding, and the delivery is always on time.
-              Highly recommend!"
+              Highly recommend!&quot;
             </p>
           </blockquote>
         </div>
