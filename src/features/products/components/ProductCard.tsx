@@ -139,7 +139,7 @@ export function ProductCard({
           {product.imageCover ? (
             <Image
               src={product.imageCover}
-              alt={product.title}
+              alt=""
               fill
               unoptimized
               sizes={

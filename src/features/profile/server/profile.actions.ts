@@ -110,11 +110,19 @@ export async function updateProfile(body: UpdateProfileBody) {
   if (!token) return { success: false as const, message: "Please sign in." };
 
   try {
+    const payload: Record<string, string> = {
+      name: body.name,
+      email: body.email,
+    };
+    if (body.phone) {
+      payload.phone = body.phone;
+    }
+
     const config: AxiosRequestConfig = {
       method: "PUT",
       url: "/users/updateMe",
       headers: { token },
-      data: body,
+      data: payload,
     };
     const { data } = await apiClient.request<{
       message?: string;

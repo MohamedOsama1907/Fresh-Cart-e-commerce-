@@ -27,7 +27,7 @@ export interface AddAddressBody {
 export interface UpdateProfileBody {
   name: string;
   email: string;
-  phone: string;
+  phone?: string;
 }
 
 export interface ChangePasswordBody {

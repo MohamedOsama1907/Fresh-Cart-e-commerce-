@@ -25,7 +25,7 @@ export default function HomeScreen() {
   });
 
   return (
-    <>
+    <main>
       <Slider />
       <StoreFeatures />
 
@@ -56,6 +56,6 @@ export default function HomeScreen() {
       ) : null}
 
       <DownloadAppBanner />
-    </>
+    </main>
   );
 }

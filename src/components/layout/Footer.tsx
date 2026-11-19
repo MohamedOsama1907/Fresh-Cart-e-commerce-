@@ -120,7 +120,7 @@ export default function Footer() {
               </h2>
               <ul className="space-y-3">
                 <li><Link href="/profile" className={footerLinkClass}>My Profile</Link></li>
-                <li><Link href="/myorders" className={footerLinkClass}>Order History</Link></li>
+                <li><Link href="/myorders#history" className={footerLinkClass}>Order History</Link></li>
                 <li><Link href="/wishlist" className={footerLinkClass}>Wishlist</Link></li>
                 <li><Link href="/cart" className={footerLinkClass}>Shopping Cart</Link></li>
                 <li><Link href="/profile/myaddresses" className={footerLinkClass}>Saved Addresses</Link></li>
@@ -138,7 +138,7 @@ export default function Footer() {
                 <li><Link href="/terms#shipping-delivery" className={footerLinkClass}>Shipping Info</Link></li>
                 <li><Link href="/terms#returns-refunds" className={footerLinkClass}>Returns &amp; Refunds</Link></li>
                 <li><Link href="/myorders" className={footerLinkClass}>Track Orders</Link></li>
-                <li><Link href="/contact" className={footerLinkClass}>24/7 Live Help</Link></li>
+                <li><Link href="/contact#faq" className={footerLinkClass}>FAQ &amp; Help</Link></li>
               </ul>
             </div>
 

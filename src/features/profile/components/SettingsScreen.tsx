@@ -65,10 +65,11 @@ export default function SettingsScreen() {
 
     setIsUpdatingProfile(true);
     try {
+      const trimmedPhone = phone.trim();
       const res = await updateProfile({
         name: name.trim(),
         email: email.trim(),
-        phone: phone.trim(),
+        ...(trimmedPhone && { phone: trimmedPhone }),
       });
 
       if (res.success) {
