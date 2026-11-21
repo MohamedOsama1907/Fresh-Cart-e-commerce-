@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 import { apiClient } from "@/services/apiClient";
 import { isAxiosError, type AxiosRequestConfig } from "axios";
+import { verifyToken } from "@/features/auth/server/auth.actions";
 import { getAddressById as fetchAddressById } from "../services/getAddressById";
 import type {
   AddAddressBody,
@@ -22,6 +23,9 @@ function getErrorMessage(error: unknown, fallback: string): string {
 // ─── Addresses ─────────────────────────────────────────────────────────────
 
 export async function getAddresses(): Promise<AddressesApiResponse> {
+  const { isAuthenticated } = await verifyToken();
+  if (!isAuthenticated) throw new Error("Please sign in to view your addresses.");
+
   const token = (await cookies()).get("token")?.value;
   if (!token) throw new Error("Please sign in to view your addresses.");
 
@@ -37,12 +41,18 @@ export async function getAddresses(): Promise<AddressesApiResponse> {
 export async function getAddressById(
   addressId: string,
 ): Promise<AddressApiResponse> {
+  const { isAuthenticated } = await verifyToken();
+  if (!isAuthenticated) throw new Error("Please sign in to view this address.");
+
   const token = (await cookies()).get("token")?.value;
   if (!token) throw new Error("Please sign in to view this address.");
   return fetchAddressById(addressId, token);
 }
 
 export async function addAddress(body: AddAddressBody) {
+  const { isAuthenticated } = await verifyToken();
+  if (!isAuthenticated) return { success: false as const, message: "Please sign in." };
+
   const token = (await cookies()).get("token")?.value;
   if (!token) return { success: false as const, message: "Please sign in." };
 
@@ -64,6 +74,9 @@ export async function addAddress(body: AddAddressBody) {
 }
 
 export async function removeAddress(addressId: string) {
+  const { isAuthenticated } = await verifyToken();
+  if (!isAuthenticated) return { success: false as const, message: "Please sign in." };
+
   const token = (await cookies()).get("token")?.value;
   if (!token) return { success: false as const, message: "Please sign in." };
 
@@ -89,6 +102,9 @@ export async function removeAddress(addressId: string) {
 // ─── Profile & User ──────────────────────────────────────────────────────────
 
 export async function getMe() {
+  const { isAuthenticated } = await verifyToken();
+  if (!isAuthenticated) return null;
+
   const token = (await cookies()).get("token")?.value;
   if (!token) return null;
 
@@ -106,6 +122,9 @@ export async function getMe() {
 }
 
 export async function updateProfile(body: UpdateProfileBody) {
+  const { isAuthenticated } = await verifyToken();
+  if (!isAuthenticated) return { success: false as const, message: "Please sign in." };
+
   const token = (await cookies()).get("token")?.value;
   if (!token) return { success: false as const, message: "Please sign in." };
 
@@ -142,6 +161,9 @@ export async function updateProfile(body: UpdateProfileBody) {
 }
 
 export async function changePassword(body: ChangePasswordBody) {
+  const { isAuthenticated } = await verifyToken();
+  if (!isAuthenticated) return { success: false as const, message: "Please sign in." };
+
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
   if (!token) return { success: false as const, message: "Please sign in." };
