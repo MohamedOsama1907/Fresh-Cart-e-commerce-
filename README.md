@@ -1,178 +1,327 @@
-# FreshCart
+# FreshCart 🛒
 
-FreshCart is a responsive e-commerce storefront built with Next.js. It connects to the Route Ecommerce API and supports product discovery, account access, cart and wishlist management, checkout, and order history.
+**A Modern E-Commerce Web Application Built with Next.js, React, and TypeScript.**
 
-[![Next.js 16](https://img.shields.io/badge/Next.js-16.4.1-000000?logo=nextdotjs)](https://nextjs.org/)
-[![React 19](https://img.shields.io/badge/React-19.3.0-149eca?logo=react)](https://react.dev/)
-[![TypeScript 5](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript)](https://www.typescriptlang.org/)
-[![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-4-06b6d4?logo=tailwindcss)](https://tailwindcss.com/)
+FreshCart is a feature-rich, responsive e-commerce application designed to deliver a complete online shopping experience. It connects to the Route Ecommerce REST API and brings together product discovery, authentication, cart and wishlist management, checkout, reviews, and order tracking in one application.
 
-## Contents
-
-- [Project Overview](#project-overview)
-- [Live Demo](#live-demo)
-- [Screenshots and Visual Assets](#screenshots-and-visual-assets)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Key Implementations](#key-implementations)
-- [What I Learned](#what-i-learned)
-- [Installation and Setup](#installation-and-setup)
-- [Environment Variables](#environment-variables)
-- [Project Structure](#project-structure)
-- [Available Scripts](#available-scripts)
-- [Links and Credits](#links-and-credits)
-
-## Project Overview
-
-FreshCart is a multi-page shopping experience for browsing a product catalog and completing common e-commerce tasks. The frontend is organized by feature and uses a shared Axios client to communicate with the Route Ecommerce API. Authenticated operations read the session token from an HttpOnly cookie on the server.
-
-## Live Demo
-
-[Open the FreshCart live demo](https://fresh-cart-e-commerce-rho.vercel.app/)
-
-## Screenshots and Visual Assets
-
-The repository does not currently include captured application screenshots. The live demo above shows the running interface. The project does include this shopping illustration, used on the authentication screens:
+The project focuses on more than building UI screens. It demonstrates practical frontend engineering skills, including feature-based architecture, API integration, authentication handling, server and client state management, form validation, caching strategies, and building reusable components for a multi-page application.
 
 <p align="center">
-  <img src="src/assets/images/home-slider-1.png" alt="FreshCart shopping cart illustration used on the authentication screens" width="320" />
+  <a href="https://fresh-cart-e-commerce-rho.vercel.app/"><strong>🌐 Live Demo</strong></a>
+  &nbsp; • &nbsp;
+  <a href="https://github.com/MohamedOsama1907/Fresh-Cart-e-commerce-"><strong>💻 Source Code</strong></a>
 </p>
 
-## Features
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-16.4.1-black?logo=next.js" alt="Next.js" />
+  <img src="https://img.shields.io/badge/React-19.3.0-149eca?logo=react" alt="React" />
+  <img src="https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-4-06b6d4?logo=tailwindcss" alt="Tailwind CSS" />
+</p>
 
-### Browse and discover products
+---
 
-- Homepage with a rotating promotional carousel, store benefits, categories, offers, and featured products.
-- Search page with grid/list layouts, pagination, keyword search, sorting, category and brand filters, and minimum/maximum price filters; the shop page provides paginated product browsing.
-- Browse categories, subcategories, and brands, including their related products.
-- Product detail pages with an image gallery, product information, stock and quantity controls, and rating information.
+## 📌 Table of Contents
 
-### Reviews
+- [Project Overview](#-project-overview)
+- [Features](#-features)
+- [Technical Highlights](#-technical-highlights)
+- [Tech Stack](#-tech-stack)
+- [Architecture and Code Organization](#-architecture-and-code-organization)
+- [AI-Assisted Development](#-ai-assisted-development)
+- [Getting Started](#-getting-started)
+- [Environment Configuration](#-environment-configuration)
+- [Available Scripts](#-available-scripts)
+- [Project Structure](#-project-structure)
+- [API and Credits](#-api-and-credits)
 
-- Product rating summary and rating distribution.
-- Reviews fetched in pages of five with a Show More interaction.
-- Create, edit, and delete review flows with form validation and owner/admin action visibility checks in the interface.
+## 🚀 Project Overview
 
-### Shopping and checkout
+FreshCart is a multi-page e-commerce frontend application built with the Next.js App Router.
 
-- Authenticated cart with quantity updates, item removal, clear-cart and coupon actions.
-- Add-to-cart actions with a product-image flight animation toward the navbar cart icon; the animation respects reduced-motion preferences.
-- Authenticated wishlist with add/remove actions and a saved-products page.
-- Checkout with shipping-address validation, a live order summary, and Cash on Delivery order placement. Online payment is not available yet.
-- Order history with expandable order items, shipping details, and payment/delivery status.
+It provides a complete shopping journey, allowing users to explore products, discover categories and brands, manage their accounts, save favorite products, and place orders.
 
-### Accounts and support
+The application integrates with the Route Ecommerce API through a shared Axios client. Its codebase follows a feature-based structure, separating UI components, services, hooks, types, schemas, and server-side logic according to their responsibilities.
 
-- Sign-up, sign-in, sign-out, and token verification.
-- Password recovery flow: request a reset code, verify the six-digit code, and set a new password.
-- Profile settings and saved-address management.
-- Contact page with client-side form validation and local confirmation feedback; it is not connected to a message API. Terms and Privacy Policy pages are also included.
+The main goal was to build a maintainable application where different features work together consistently, rather than treating every page as an isolated component.
 
-## Tech Stack
+## ✨ Features
 
-| Area | Technologies |
+### 🛍️ Product Discovery and Catalog
+
+- Responsive homepage featuring promotional sliders, store benefits, categories, offers, and featured products.
+- Product browsing with pagination.
+- Dedicated search experience with grid and list layouts.
+- Keyword search with sorting and filtering by category, brand, and price range.
+- Dedicated category, subcategory, and brand pages.
+- Dynamic product detail pages with image galleries, product information, stock availability, quantity controls, and ratings.
+
+### ⭐ Product Reviews
+
+- Product rating summaries and rating distributions.
+- Paginated review loading with a Show More interaction.
+- Create, edit, and delete review functionality.
+- Form validation and owner/admin action visibility checks in the interface.
+
+### 🛒 Cart and Wishlist
+
+- Authenticated shopping cart management.
+- Add products, update quantities, remove individual items, and clear the cart.
+- Coupon application functionality.
+- Wishlist management with add/remove actions.
+- Dedicated saved-products page.
+- Dynamic cart and wishlist data updates.
+- Product-image flight animation when adding an item to the cart, with reduced-motion support.
+
+### 💳 Checkout and Orders
+
+- Checkout form with shipping-address validation.
+- Live order summary.
+- Cash on Delivery order placement.
+- Order history with expandable order details.
+- Shipping information and payment/delivery status display.
+
+### 🔐 Authentication and Account Management
+
+- User registration and login.
+- Logout and token verification.
+- Password recovery workflow:
+  - Request a password reset code.
+  - Verify the six-digit code.
+  - Set a new password.
+- Profile settings and personal information updates.
+- Saved-address management.
+- Server-managed authentication token using HttpOnly cookies.
+
+### 📩 Additional Pages
+
+- Contact page with client-side form validation and local confirmation feedback.
+- Terms and Conditions.
+- Privacy Policy.
+
+## 🧠 Technical Highlights
+
+This project involved implementing and connecting multiple frontend systems while keeping the codebase organized and maintainable.
+
+### Feature-Based Architecture
+
+Organized the application around independent business features, keeping related components, hooks, services, types, schemas, and server actions together.
+
+This makes the code easier to understand, maintain, debug, and extend as the application grows.
+
+### Authentication and Server-Side Logic
+
+- Implemented authentication using Next.js Server Actions.
+- Stored the API authentication token in an HttpOnly cookie.
+- Verified the user session on the server through the root layout.
+- Initialized the client-side authentication state with user information.
+- Kept the authentication token out of browser-accessible Redux state.
+
+### API Integration
+
+- Built a shared Axios client for communicating with the Route Ecommerce API.
+- Organized API operations into feature-specific services and server actions.
+- Integrated authenticated requests and handled API responses and errors.
+- Used the API's v2 endpoints for cart and cash-order operations where required.
+
+### State Management and Data Fetching
+
+- Used Redux Toolkit for client-side application and authentication state.
+- Used TanStack Query for remote data fetching, caching, mutations, and synchronization.
+- Managed query invalidation after successful mutations to keep related data up to date.
+- Organized query keys and data-fetching logic by feature.
+
+### Forms and Validation
+
+- Built reusable form flows using React Hook Form.
+- Used Zod schemas for structured validation.
+- Integrated `@hookform/resolvers` to connect form validation with Zod.
+- Applied validation across authentication, checkout, contact, and review forms.
+
+### Search, Filtering, and Pagination
+
+- Implemented API-driven product search and filtering.
+- Supported keyword search, sorting, category filters, brand filters, and price ranges.
+- Included filter values in query keys to keep fetched results synchronized with the selected filters.
+- Used reusable pagination components across catalog views.
+
+### UI, Interaction, and Responsive Design
+
+- Built reusable UI components and responsive layouts.
+- Integrated Swiper for sliders and Motion for interface animations.
+- Used product image galleries for product detail pages.
+- Respected reduced-motion preferences for animated interactions.
+- Used Tabler Icons for consistent interface iconography.
+
+## 🛠️ Tech Stack
+
+| Category | Technologies |
 | --- | --- |
-| Framework and language | Next.js 16 App Router, React 19, TypeScript 5 |
-| Styling | Tailwind CSS 4, project CSS theme and responsive utilities |
-| Client state | Redux Toolkit and React Redux |
-| Server state and requests | TanStack Query 5, Axios, React Query Devtools |
-| Forms and validation | React Hook Form, Zod, `@hookform/resolvers` |
-| UI and interaction | Tabler Icons, Motion, Swiper, `react-image-gallery`, Sonner |
-| Quality and build tooling | ESLint 9, Next.js ESLint config, React Compiler |
+| Framework | Next.js 16 App Router |
+| UI Library | React 19 |
+| Language | TypeScript 5 |
+| Styling | Tailwind CSS 4 |
+| Client State Management | Redux Toolkit, React Redux |
+| Server State Management | TanStack Query 5 |
+| HTTP Client | Axios |
+| Forms | React Hook Form |
+| Validation | Zod, @hookform/resolvers |
+| UI and Icons | Tabler Icons |
+| Animations | Motion |
+| Sliders | Swiper |
+| Image Gallery | React Image Gallery |
+| Notifications | Sonner |
+| Code Quality | ESLint 9 |
+| Deployment | Vercel |
 
-## Key Implementations
+## 🏗️ Architecture and Code Organization
 
-- **Feature-based organization:** Screens, services, hooks, types, schemas, and server actions are grouped under `src/features/` by domain.
-- **Cookie-based authentication:** The login Server Action stores the API token in an HttpOnly cookie. The root layout verifies the token on the server and seeds the Redux authentication state with the user details; the token itself is not placed in client state.
-- **API integration:** A shared Axios instance is configured in [`src/services/apiClient.ts`](src/services/apiClient.ts) for the Route Ecommerce API. Cart and cash-order flows use the API's v2 endpoints where required.
-- **Remote data and cache updates:** TanStack Query powers catalog, product, cart, wishlist, order, and profile queries. Mutations invalidate the relevant cache keys after successful changes.
-- **Validated forms:** React Hook Form and Zod schemas handle authentication, password recovery, checkout, contact, and review forms.
-- **Catalog filtering:** Search requests send keyword, sort, category, brand, and price filters to the product API and include filter values in the query key. Pagination is shared through a reusable component.
-- **Responsive product experience:** Product galleries use `react-image-gallery`; Motion and Swiper provide page interactions, with reduced-motion support for animations.
+The application follows a feature-based architecture to keep business logic and UI responsibilities separated.
 
-## What I Learned
+Each feature owns its related implementation instead of placing everything in shared folders.
 
-- Structuring a larger Next.js App Router project around independent features and server/client responsibilities.
-- Integrating REST endpoints with typed response models and handling authenticated requests without exposing the HttpOnly token to browser code.
-- Using Redux for client-side authentication state and TanStack Query for server data, caching, mutations, and cache invalidation.
-- Building reusable form flows with React Hook Form and Zod validation.
-- Combining URL-driven routes, dynamic product pages, catalogue filtering, and pagination into a cohesive shopping flow.
-- Creating responsive interfaces and accessible interactions, including image galleries and reduced-motion-aware animations.
+The project also separates shared infrastructure, application routing, and global state management.
 
-## Installation and Setup
+This approach helps reduce unnecessary dependencies between features and makes future changes easier to manage.
+
+## 🤖 AI-Assisted Development
+
+AI tools were used as part of the development workflow to support problem-solving, implementation planning, debugging, and code improvement.
+
+Rather than relying on generated code without review, the workflow involved:
+
+- Breaking larger development tasks into smaller, well-defined requirements.
+- Using AI assistants to investigate technical issues and explore possible solutions.
+- Reviewing suggested implementations against the existing project architecture and coding conventions.
+- Using AI assistance to identify potential bugs, improve code readability, and refine implementation approaches.
+- Validating changes through code inspection, application behavior, and available development checks.
+- Iterating on prompts and solutions when the initial output did not fully satisfy the requirements.
+
+This workflow helped develop practical skills in AI-assisted development, including writing precise technical prompts, evaluating generated code, identifying incorrect assumptions, and maintaining control over implementation decisions.
+
+**The focus was on using AI as a development assistant while keeping technical decisions, code review, integration, and verification part of the development process.**
+
+## ⚙️ Getting Started
 
 ### Prerequisites
 
-- Node.js and npm versions supported by Next.js 16.
-- Internet access to reach the configured Route Ecommerce API.
+- Node.js compatible with Next.js 16.
+- npm.
+- Internet connection to access the Route Ecommerce API.
 
-### Run locally
+### Installation
+
+Clone the repository:
 
 ```bash
 git clone https://github.com/MohamedOsama1907/Fresh-Cart-e-commerce-.git
+```
+
+Navigate to the project directory:
+
+```bash
 cd Fresh-Cart-e-commerce-
+```
+
+Install dependencies:
+
+```bash
 npm ci
+```
+
+Start the development server:
+
+```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000) to view the application.
 
-To create and run a production build:
+### Production Build
+
+Create a production build:
 
 ```bash
 npm run build
+```
+
+Start the production server:
+
+```bash
 npm start
 ```
 
-## Environment Variables
+## 🔑 Environment Configuration
 
-No environment variables are currently referenced by the application, and no `.env` file is required for local startup. The shared Axios client currently defines the API base URL in [`src/services/apiClient.ts`](src/services/apiClient.ts). Authenticated sessions use an HttpOnly cookie managed by server actions; do not add token values to source control or expose them in client-side environment variables.
+The current application does not require a `.env` file for local startup.
 
-## Project Structure
+The Route Ecommerce API base URL is configured in the shared Axios client:
+
+`src/services/apiClient.ts`
+
+Authentication sessions use an HttpOnly cookie managed through server-side actions.
+
+Never expose authentication tokens in client-side environment variables or commit private credentials to the repository.
+
+## 📜 Available Scripts
+
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Starts the Next.js development server. |
+| `npm run build` | Creates an optimized production build. |
+| `npm start` | Runs the production server. |
+| `npm run lint` | Runs ESLint to check code quality. |
+
+## 📁 Project Structure
 
 ```text
 src/
 ├── app/
-│   ├── (authentication)/       # Login, sign-up, and password recovery routes
-│   ├── (platform)/             # Storefront, product, cart, checkout, and account routes
-│   ├── layout.tsx              # Root layout, providers, navbar, footer, and notifications
-│   └── page.tsx                # Homepage route
-├── components/                 # Shared layout, buttons, pagination, errors, and loaders
+│   ├── (authentication)/       # Authentication and password recovery routes
+│   ├── (platform)/             # Storefront and authenticated application routes
+│   ├── layout.tsx              # Root layout and application providers
+│   └── page.tsx                # Homepage
+│
+├── components/                 # Shared UI components
+│
 ├── features/
-│   ├── auth/                   # Authentication screens, schemas, actions, and Redux slice
-│   ├── cart/                   # Cart API actions, query hooks, UI, and animation provider
-│   ├── checkout/               # Checkout form and cash-order flow
-│   ├── home/                   # Homepage, promotions, categories, and featured products
-│   ├── search/                 # Search filters, product results, and pagination
-│   ├── shop/                   # Paginated product browsing
-│   ├── products/               # Product cards, details, gallery, and reviews
+│   ├── auth/                   # Authentication and account access
+│   ├── cart/                   # Cart management
+│   ├── checkout/               # Checkout and order placement
+│   ├── home/                   # Homepage sections
+│   ├── search/                 # Search and filtering
+│   ├── shop/                   # Product browsing
+│   ├── products/               # Product details and reviews
 │   ├── categories/             # Category pages
 │   ├── subcategories/          # Subcategory pages
 │   ├── brands/                 # Brand pages
-│   ├── wishlist/               # Saved products
+│   ├── wishlist/               # Wishlist management
 │   ├── orders/                 # Order history
-│   ├── profile/                # Account settings and addresses
-│   ├── support/                # Contact page
-│   └── checkout/               # Shipping form and order placement
-├── services/apiClient.ts       # Shared Axios configuration
-├── store/                      # Redux store setup and types
-├── styles/globals.css          # Tailwind import, theme, and shared styles
-└── assets/images/              # Logo and application visuals
+│   ├── profile/                # Profile and saved addresses
+│   └── support/                # Contact and support pages
+│
+├── services/
+│   └── apiClient.ts            # Shared Axios configuration
+│
+├── store/                      # Redux store and state management
+│
+├── styles/
+│   └── globals.css             # Global styles and theme
+│
+└── assets/
+    └── images/                 # Application images and visual assets
 ```
 
-Most feature folders follow a local structure of `components/`, `hooks/`, `services/`, `server/`, `schemas/`, and `types/` as needed.
+Feature folders contain the relevant components, hooks, services, server actions, schemas, and types as needed.
 
-## Available Scripts
+## 🔗 API and Credits
 
-| Command | Description |
-| --- | --- |
-| `npm run dev` | Start the Next.js development server. |
-| `npm run build` | Create a production build. |
-| `npm start` | Serve the production build. Run `npm run build` first. |
-| `npm run lint` | Run ESLint. |
+- **Live Demo:** https://fresh-cart-e-commerce-rho.vercel.app/
+- **GitHub Repository:** https://github.com/MohamedOsama1907/Fresh-Cart-e-commerce-
+- **API Provider:** [Route Academy - Ecommerce API](https://ecommerce.routemisr.com/)
 
-## Links and Credits
+---
 
-- **Live application:** [fresh-cart-e-commerce-rho.vercel.app](https://fresh-cart-e-commerce-rho.vercel.app/)
-- **GitHub repository:** [MohamedOsama1907/Fresh-Cart-e-commerce-](https://github.com/MohamedOsama1907/Fresh-Cart-e-commerce-)
-- **Product API:** [Route Ecommerce API](https://ecommerce.routemisr.com/)
+<p align="center">
+  <strong>Built with Next.js, React, TypeScript, and a focus on maintainable frontend engineering.</strong>
+</p>
